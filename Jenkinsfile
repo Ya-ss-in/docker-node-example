@@ -37,14 +37,16 @@ pipeline {
         }
     }
 
-    stage('Déployer') {
-        when {
-            expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
-        }
-        steps {
-            script {
-                docker.run('test-image-jenkins', '--name test-auto-jenkins -p 8000:8000 -d')
+    stages {
+        stage('Déployer') {
+            when {
+                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
+            }
+            steps {
+                script {
+                    docker.run('test-image-jenkins', '--name test-auto-jenkins -p 8000:8000 -d')
+                }
             }
         }
     }
-}
+}    
