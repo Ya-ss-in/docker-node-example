@@ -25,14 +25,25 @@ pipeline {
     }
 
     post {
-        success {
+        always {
             script {
-                discordSend(description: "Le build a réussi !", result: "SUCCESS", title: env.JOB_NAME, webhookURL: "https://discord.com/api/webhooks/1174322036416446474/zZJwGweVsgJ-0DL-Ytjq3NQ5-6K9jmSs1Zb6_KIxWfm7xkOiGVRCEok2yKRzfceTabIW")
+                discordSend(
+                    description: "Le build a ${currentBuild.result}", 
+                    result: currentBuild.result, 
+                    title: env.JOB_NAME, 
+                    webhookURL: "https://discord.com/api/webhooks/1174322036416446474/zZJwGweVsgJ-0DL-Ytjq3NQ5-6K9jmSs1Zb6_KIxWfm7xkOiGVRCEok2yKRzfceTabIW"
+                )
             }
         }
-        failure {
+    }
+
+    stage('Déployer') {
+        when {
+            expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
+        }
+        steps {
             script {
-                discordSend(description: "Le build a échoué.", result: "FAILURE", title: env.JOB_NAME, webhookURL: "https://discord.com/api/webhooks/1174322036416446474/zZJwGweVsgJ-0DL-Ytjq3NQ5-6K9jmSs1Zb6_KIxWfm7xkOiGVRCEok2yKRzfceTabIW")
+                docker.run('test-image-jenkins', '--name test-auto-jenkins -p 8000:8000 -d')
             }
         }
     }
