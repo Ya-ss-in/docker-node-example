@@ -18,7 +18,18 @@ pipeline {
         stage('Analyser l\'image avec Trivy') {
             steps {
                 script {
-                    docker.image('aquasec/trivy:latest').run("-v /var/run/docker.sock:/var/run/docker.sock test-image-jenkins")
+                    docker.image('aquasec/trivy:latest').run("-v /var/run/docker.sock:/var/run/docker.sock test test-image-jenkins")
+                }
+            }
+        }
+
+        stage('Déployer') {
+            when {
+                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
+            }
+            steps {
+                script {
+                    docker.run('test-image-jenkins', '--name test-auto-jenkins -p 8000:8000 -d')
                 }
             }
         }
@@ -36,17 +47,4 @@ pipeline {
             }
         }
     }
-
-    stages {
-        stage('Déployer') {
-            when {
-                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
-            }
-            steps {
-                script {
-                    docker.run('test-image-jenkins', '--name test-auto-jenkins -p 8000:8000 -d')
-                }
-            }
-        }
-    }
-}    
+}
