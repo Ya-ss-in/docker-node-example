@@ -6,11 +6,12 @@ pipeline {
         checkout([$clpipeline {
     agent any
     stages {
-        stage('Cloner le dépôt') {
-            steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/Ya-ss-in/docker-node-example.git']]])
-            }
+        stage('Cloner le depot') {
+          steps {
+            checkout([$class: 'GitSCM', branches: [[name: 'main']], userRemoteConfigs: [[url: 'https://github.com/Ya-ss-in/docker-node-example.git']]])
+          }
         }
+
 
         stage('Construire l\'image Docker') {
             steps {
