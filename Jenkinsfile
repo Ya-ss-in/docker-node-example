@@ -11,7 +11,7 @@ pipeline {
         stage('Construire l\'image Docker') {
             steps {
                 script {
-                    docker.build('nom-image')
+                    docker.build('test_jenkins')
                 }
             }
         }
