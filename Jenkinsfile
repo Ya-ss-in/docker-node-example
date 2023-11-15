@@ -11,7 +11,7 @@ pipeline {
         stage('Construire l\'image Docker') {
             steps {
                 script {
-                    docker.build('test_jenkins')
+                    docker.build('nom-image')
                 }
             }
         }
@@ -25,10 +25,14 @@ pipeline {
 
     post {
         success {
-            discordSend(message: 'Le build a réussi !', color: '00FF00')
+            script {
+                discordSend(description: "Le build a réussi !", result: "SUCCESS", title: env.JOB_NAME, webhookURL: "Webhook URL")
+            }
         }
         failure {
-            discordSend(message: 'Le build a échoué.', color: 'FF0000')
+            script {
+                discordSend(description: "Le build a échoué.", result: "FAILURE", title: env.JOB_NAME, webhookURL: "Webhook URL")
+            }
         }
     }
 }
