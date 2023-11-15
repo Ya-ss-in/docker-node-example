@@ -1,32 +1,29 @@
 pipeline {
-    agent any
-
-    stages {
-        stage('Cloner le dépôt') {
-            steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/Ya-ss-in/docker-node-example.git']]])
-            }
-        }
-
-        stage('Construire l\'image Docker') {
-            steps {
-                script {
-                    docker.build('test-yassin-jenkins')
-                }
-            }
-        }
-
-
-    post {
-        success {
-            script {
-                discordSend(description: "Le build a réussi !", result: "SUCCESS", title: env.JOB_NAME, webhookURL: "https://discord.com/api/webhooks/1174322036416446474/zZJwGweVsgJ-0DL-Ytjq3NQ5-6K9jmSs1Zb6_KIxWfm7xkOiGVRCEok2yKRzfceTabIW")
-            }
-        }
-        failure {
-            script {
-                discordSend(description: "Le build a échoué.", result: "FAILURE", title: env.JOB_NAME, webhookURL: "https://discord.com/api/webhooks/1174322036416446474/zZJwGweVsgJ-0DL-Ytjq3NQ5-6K9jmSs1Zb6_KIxWfm7xkOiGVRCEok2yKRzfceTabIW")
-            }
-        }
+  agent any
+  stages {
+    stage('Test') {
+      steps {
+        echo 'Démarrage Test'
+        sleep 30
+        echo 'Test terminé'
+      }
     }
+
+    stage('Build') {
+      steps {
+        echo 'Démarrage Build'
+        sleep 30
+        echo 'Build terminé'
+      }
+    }
+
+    stage('Deploy') {
+      steps {
+        echo 'Démarrage Deploy'
+        sleep 30
+        echo 'Deploy terminé'
+      }
+    }
+
+  }
 }
