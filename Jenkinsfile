@@ -16,12 +16,6 @@ pipeline {
             }
         }
 
-        stage('Tests unitaires') {
-            steps {
-                // Ajoutez les commandes pour exécuter les tests unitaires (si nécessaire)
-            }
-        }
-    }
 
     post {
         success {
