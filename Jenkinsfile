@@ -1,29 +1,34 @@
 pipeline {
-  agent any
-  stages {
-    stage('Test') {
-      steps {
-        echo 'DÈmarrage Test'
-        sleep 30
-        echo 'Test terminÈ'
-      }
+    agent any
+
+    stages {
+        stage('Cloner le d√©p√¥t') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: 'https://github.com/votre-utilisateur/votre-depot.git']]])
+            }
+        }
+
+        stage('Construire l\'image Docker') {
+            steps {
+                script {
+                    docker.build('nom-image')
+                }
+            }
+        }
+
+        stage('Tests unitaires') {
+            steps {
+                // Ajoutez les commandes pour ex√©cuter les tests unitaires (si n√©cessaire)
+            }
+        }
     }
 
-    stage('Build') {
-      steps {
-        echo 'DÈmarrage Build'
-        sleep 30
-        echo 'Build terminÈ'
-      }
+    post {
+        success {
+            discordSend(message: 'Le build a r√©ussi !', color: '00FF00')
+        }
+        failure {
+            discordSend(message: 'Le build a √©chou√©.', color: 'FF0000')
+        }
     }
-
-    stage('Deploy') {
-      steps {
-        echo 'DÈmarrage Deploy'
-        sleep 30
-        echo 'Deploy terminÈ'
-      }
-    }
-
-  }
 }
