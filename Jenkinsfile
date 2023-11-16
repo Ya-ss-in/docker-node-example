@@ -1,9 +1,10 @@
 pipeline {
   agent any
+
   stages {
-    stage('Cloner le dépôt') {
+    stage('Cloner le depot') {
       steps {
-        checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/Ya-ss-in/docker-node-example.git']]])
+        checkout scm
       }
     }
 
@@ -12,32 +13,40 @@ pipeline {
         script {
           docker.build('test-image-jenkins')
         }
-
       }
     }
 
     stage('Analyser l\'image avec Trivy') {
       steps {
-        sh 'docker run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy:latest image test-image-jenkins'
+        script {
+          docker.image('aquasec/trivy:latest').run("image test-image-jenkins")
+        }
       }
     }
 
-    stage('Déployer') {
+    stage('Deployer') {
       when {
         expression {
           currentBuild.resultIsBetterOrEqualTo('SUCCESS')
         }
-
       }
       steps {
         script {
           def container = docker.image('test-image-jenkins').run("--name test-auto-jenkins -p 8000:8080 -d")
         }
-
       }
     }
 
+    stage('Nettoyage apres le deploiement') {
+      steps {
+        script {
+          docker.image('test-image-jenkins').stop()
+          docker.image('test-image-jenkins').remove()
+        }
+      }
+    }
   }
+
   post {
     always {
       script {
@@ -48,8 +57,6 @@ pipeline {
           webhookURL: "https://discord.com/api/webhooks/1174322036416446474/zZJwGweVsgJ-0DL-Ytjq3NQ5-6K9jmSs1Zb6_KIxWfm7xkOiGVRCEok2yKRzfceTabIW"
         )
       }
-
     }
-
   }
 }
