@@ -21,18 +21,22 @@ pipeline {
       }
     }
 
-    stage('Deployer') {
+    stage('Déployer') {
       when {
         expression {
           currentBuild.resultIsBetterOrEqualTo('SUCCESS')
         }
+
       }
       steps {
         script {
-          def container = docker.image('test-image-jenkins').run("--name test-auto-jenkins -p 8000:8080 -d")
+          def container = docker.image('test-image-jenkins').run("--name test-auto-jenkins -p 8000:80 -d")
         }
+
       }
     }
+
+  }
 
     stage('Nettoyage apres le deploiement') {
       steps {
