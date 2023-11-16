@@ -1,7 +1,7 @@
 pipeline {
   agent any
-
-  stage('Cloner le dépôt') {
+  stages {
+    stage('Cloner le dépôt') {
       steps {
         checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/Ya-ss-in/docker-node-example.git']]])
       }
