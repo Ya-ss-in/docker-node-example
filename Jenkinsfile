@@ -12,6 +12,7 @@ pipeline {
         script {
           docker.build('test-image-jenkins')
         }
+
       }
     }
 
@@ -37,17 +38,6 @@ pipeline {
     }
 
   }
-
-    stage('Nettoyage apres le deploiement') {
-      steps {
-        script {
-          docker.image('test-image-jenkins').stop()
-          docker.image('test-image-jenkins').remove()
-        }
-      }
-    }
-  }
-
   post {
     always {
       script {
@@ -58,6 +48,8 @@ pipeline {
           webhookURL: "https://discord.com/api/webhooks/1174322036416446474/zZJwGweVsgJ-0DL-Ytjq3NQ5-6K9jmSs1Zb6_KIxWfm7xkOiGVRCEok2yKRzfceTabIW"
         )
       }
+
     }
+
   }
 }
