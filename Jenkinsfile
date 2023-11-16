@@ -25,7 +25,7 @@ pipeline {
     stage('Déployer') {
       when {
         expression {
-          previousBuildResultIs('SUCCESS')
+          currentBuild.resultIsBetterOrEqualTo('SUCCESS')
         }
 
       }
