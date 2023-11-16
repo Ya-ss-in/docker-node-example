@@ -31,7 +31,7 @@ pipeline {
       }
       steps {
         script {
-          def container = docker.image('test-image-jenkins').run("--name test-auto-jenkins -p 8000:8000 -d")
+          def container = docker.image('test-image-jenkins').run("--name test-auto-jenkins -p 8000:80 -d")
         }
 
       }
