@@ -18,10 +18,6 @@ pipeline {
 
     stage('Analyser l\'image avec Trivy') {
       steps {
-        script {
-          docker.image('aquasec/trivy:latest').run("-v /var/run/docker.sock:/var/run/docker.sock image test-image-jenkins")
-        }
-
         sh 'docker run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy:latest image test-image-jenkins'
       }
     }
